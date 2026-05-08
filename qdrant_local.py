@@ -1,26 +1,58 @@
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
+from sample_loop import transformToVector
+from PIL import Image #A way to import images
+from pathlib import Path
+import torch.nn.functional as F
+import timeit
 
 qdrant = QdrantClient(":memory:") # Create in-memory Qdrant instance, for testing, CI/CD
+database_path = Path("mtgDir")
+valid_extensions = ('.jpg', '.png', 'jpeg')
 
 # Creating the collection 
-def create_collection():
-    qdrant.create_collection(
-        collection_name="mtg_cards",
-        vectors_config=VectorParams(
-            size=768, # Needs to be the output from DINOv2
-            distance=Distance.COSINE
-    )
-)
-
+#def create_collection():
+#    qdrant.create_collection(
+#        collection_name="mtg_cards",
+#        vectors_config=VectorParams(
+#            size=384, # Needs to be the output from DINOv2
+#            distance=Distance.COSINE
+#    )   
+#)
 
 
 # Store the data
 def dataStorage():
-    if not qdrant.collection_exists(collection_name={"mtg_cards"}):
-        create_collection()
+    if not qdrant.collection_exists(collection_name="mtg_cards"):
+        qdrant.create_collection(
+        collection_name="mtg_cards",
+        vectors_config=VectorParams(
+            size=384, # Needs to be the output from DINOv2
+            distance=Distance.COSINE
+            )   
+        )
 
-# Step 1 - Dino
+    for idx, file_path in enumerate(database_path.glob('*')):
+        if file_path.suffix.lower() in valid_extensions:
+            start = timeit.default_timer()
+            img = Image.open(file_path).convert('RGB')
+            vec = transformToVector(img)
+            #vectors.append(vec)
+            #filenames.append(file_path.name)
 
-# Step 2 - qdrant
+        # Step 2 - qdrant
+            qdrant.upsert(
+                collection_name="mtg_cards",
+                points=[
+                    PointStruct(
+                        id=idx,
+                        vector=vec, 
+                        payload={"scryfall_id": str(file_path.stem) }
+                    )
+                ]
+            )
+            end = timeit.default_timer()
+            print(end - start)
 
+
+dataStorage()
