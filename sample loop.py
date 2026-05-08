@@ -1,8 +1,8 @@
 #Import pyTorch and TorchVision
 from time import sleep
 
-import torch #This is equivalent to Keras on some levels, but different in how to use it
-import torchvision.transforms as T #Part of the Torch package, used for vision ML
+import torchvision.transforms as T
+import torch
 
 model = torch.hub.load('facebookresearch/dinov2','dinov2_vits14') #Loading this specific version of DinoV2, the small model
 model.eval()  #Setting to inference mode - We are not training, no randomness. Deterministic outcomes ONLY
@@ -32,8 +32,6 @@ def transformToVector(image): #Function to pack the image embedding into a simpl
     return embedding
 
 
-
-
 from PIL import Image #A way to import images
 from pathlib import Path
 
@@ -52,6 +50,7 @@ for file_path in database_path.glob('*'):
         img = Image.open(file_path).convert('RGB')
         vec = transformToVector(img)
         end = timeit.default_timer()
+        print(vec.shape)
         print(end - start)
         vectors.append(vec)
         filenames.append(file_path.name)
