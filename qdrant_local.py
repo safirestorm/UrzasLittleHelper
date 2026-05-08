@@ -1,14 +1,15 @@
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
-from sample_loop import transformToVector
+from VectorTransformer import transformToVector
 from PIL import Image #A way to import images
 from pathlib import Path
 import torch.nn.functional as F
 import timeit
 
 qdrant = QdrantClient(":memory:") # Create in-memory Qdrant instance, for testing, CI/CD
-database_path = Path("mtgDir")
+database_path = Path("largerSubset/znr")
 valid_extensions = ('.jpg', '.png', 'jpeg')
+print("Started qdrant, got path and established valid extensions")
 
 # Creating the collection 
 #def create_collection():
@@ -56,3 +57,17 @@ def dataStorage():
 
 
 dataStorage()
+
+# Perform check here to establish that vectors are added correctly
+point_id = 0  # Replace with the specific ID you want to check
+result = qdrant.retrieve(
+    collection_name="mtg_cards",
+    ids=[point_id],
+    with_vectors=True, # Set to True to see the actual vector data
+    with_payload=True
+)
+
+if result:
+    print(f"Retrieved point: {result[0]}")
+else:
+    print("Point not found.")
