@@ -7,7 +7,7 @@ def train_model():
 
     # 2. Train the model
     results = model.train(
-        data="Mtg2-2/data.yaml", # Path to your Roboflow data.yaml
+        data="Mtg2-3/data.yaml", # Path to your Roboflow data.yaml
         epochs=400,              # Start with 100, you can stop early if it plateaus
         imgsz=640,               # Standard YOLO resolution
         batch=16,                # Adjust based on your GPU memory (8, 16, 32)
