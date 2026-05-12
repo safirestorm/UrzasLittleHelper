@@ -12,8 +12,8 @@ nc: 1
 roboflow:
   license: CC BY 4.0
   project: mtg2
-  url: https://universe.roboflow.com/mikkels-workspace-aejbo/mtg2/dataset/2
-  version: 2
+  url: https://universe.roboflow.com/mikkels-workspace-aejbo/mtg2/dataset/3
+  version: 3
   workspace: mikkels-workspace-aejbo
 test: ../test/images
 train: ../train/images
