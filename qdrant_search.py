@@ -16,4 +16,3 @@ def makeQuery(query_img):
 
     return hits
 
-    
