@@ -1,7 +1,7 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import StreamingResponse
 from PIL import Image, ImageOps
-#from qdrant_search import makeQuery
+from qdrant_search import makeQuery
 import io
 import cv2
 
@@ -11,11 +11,9 @@ app = FastAPI()
 
 # Your requested processing function
 def process_image_logic(image) -> str:
-    print("NOT READY")
-    # Imagine some AI or filtering logic happens here
-    #result = makeQuery(image)
-
-    #return result
+    result = makeQuery(image)
+    print(result)
+    return result
 
 
 @app.post("/getId/")
@@ -27,9 +25,18 @@ async def upload_image(file: UploadFile = File(...)):
     image = Image.open(io.BytesIO(contents))
     image = ImageOps.exif_transpose(image)
 
+    # 2: transform the image
+    warpedArray = getWarpedImage(image)
+
+    if warpedArray is None:
+        print("ERROR")
+
+    rgb_image = cv2.cvtColor(warpedArray, cv2.COLOR_BGR2RGB)
+    final_pil_image = Image.fromarray(rgb_image)
+
 
     # 2. Run your processing function
-    result = process_image_logic(image)
+    result = process_image_logic(final_pil_image)
 
     return {"ScryfallID": result}
 

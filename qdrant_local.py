@@ -7,7 +7,8 @@ import torch.nn.functional as F
 import timeit
 
 qdrant = QdrantClient(url="http://localhost:6333") 
-database_path = Path("/Users/sarahfagerstrom/IdeaProjects/4.Sem/MachineLearning/images")
+#database_path = Path("/Users/sarahfagerstrom/IdeaProjects/4.Sem/MachineLearning/images")
+database_path = Path("/Users/mikkel/Downloads/archive/images/en")
 valid_extensions = ('.jpg', '.png', 'jpeg')
 print("Started qdrant, got path and established valid extensions")
 
@@ -22,7 +23,7 @@ def dataStorage():
                 distance=Distance.COSINE
             )
         )
-
+    counter = 0
     for idx, file_path in enumerate(database_path.rglob('*')):
         if file_path.suffix.lower() in valid_extensions:
             start = timeit.default_timer()
@@ -44,6 +45,9 @@ def dataStorage():
             )
             end = timeit.default_timer()
             print(end - start)
+            counter += 1
+            if counter%100 == 0:
+                print(str(counter) + "/101.318")
 
 
 dataStorage()
