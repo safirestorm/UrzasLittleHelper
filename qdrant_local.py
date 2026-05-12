@@ -6,34 +6,24 @@ from pathlib import Path
 import torch.nn.functional as F
 import timeit
 
-qdrant = QdrantClient(":memory:") # Create in-memory Qdrant instance, for testing, CI/CD
-database_path = Path("largerSubset/znr")
+qdrant = QdrantClient(url="http://localhost:6333") 
+database_path = Path("/Users/sarahfagerstrom/IdeaProjects/4.Sem/MachineLearning/images")
 valid_extensions = ('.jpg', '.png', 'jpeg')
 print("Started qdrant, got path and established valid extensions")
-
-# Creating the collection 
-#def create_collection():
-#    qdrant.create_collection(
-#        collection_name="mtg_cards",
-#        vectors_config=VectorParams(
-#            size=384, # Needs to be the output from DINOv2
-#            distance=Distance.COSINE
-#    )   
-#)
 
 
 # Store the data
 def dataStorage():
     if not qdrant.collection_exists(collection_name="mtg_cards"):
         qdrant.create_collection(
-        collection_name="mtg_cards",
-        vectors_config=VectorParams(
-            size=384, # Needs to be the output from DINOv2
-            distance=Distance.COSINE
-            )   
+            collection_name="mtg_cards",
+            vectors_config=VectorParams(
+                size=384,
+                distance=Distance.COSINE
+            )
         )
 
-    for idx, file_path in enumerate(database_path.glob('*')):
+    for idx, file_path in enumerate(database_path.rglob('*')):
         if file_path.suffix.lower() in valid_extensions:
             start = timeit.default_timer()
             img = Image.open(file_path).convert('RGB')

@@ -27,5 +27,5 @@ def transformToVector(img): #Function to pack the image embedding into a simple 
     input_tensor = transform(img)[:3].unsqueeze(0)
     with torch.no_grad():
         embedding = model(input_tensor)
-    return embedding
+    return embedding.squeeze().tolist()
 
