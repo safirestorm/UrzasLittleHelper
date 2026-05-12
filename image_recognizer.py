@@ -54,27 +54,44 @@ def warp_card(image, kpts):
 
     return warped
 
-# 2. Run inference
-source_img = "Mtg2-1/test/images/IMG_1321_JPG.rf.d67e35eb58507f3ee5e1bdabfa029583.jpg"
-results = model(source_img, conf=0.80)
 
-for r in results:
-    if r.keypoints is not None and len(r.keypoints.xy) > 0:
-        # Get the first detected card's keypoints as a numpy array
-        points = r.keypoints.xy[0].cpu().numpy()
+def getWarpedImage(image):
+    results = model(image, conf=0.80)
+    firstCard = results[0]
+    if firstCard.keypoints is not None and len(firstCard.keypoints.xy) > 0:
+        points = firstCard.keypoints.xy[0].cpu().numpy()
 
         if len(points) == 4:
-            # Warp the image
-            flat_card = warp_card(r.orig_img, points)
-
-            print("Warped Result:")
-            cv2.imshow("Warped Result: ", pad_to_square(flat_card))
-            cv2.waitKey(0)
+            flat_card = warp_card(firstCard.orig_img, points)
+            padded = pad_to_square(flat_card)
+            return padded
         else:
-            print(f"Detected {len(points)} points. Need exactly 4 to warp.")
+            print("Not enough points")
+            return None
     else:
         print("No card keypoints detected.")
+        return None
 
-cv2.destroyAllWindows()
 
-# Removed cv2.waitKey(0) and cv2.destroyAllWindows() as they crash Colab
+def getAnnotatedImage(image):
+    results = model(image, conf=0.80)
+    result = results[0]
+
+    # Work on a copy of the original image to avoid modifying the source
+    annotated_img = result.orig_img.copy()
+
+    if result.boxes is not None and result.keypoints is not None:
+        # 1. Draw Bounding Boxes
+        for box in result.boxes.xyxy:
+            x1, y1, x2, y2 = map(int, box)
+            cv2.rectangle(annotated_img, (x1, y1), (x2, y2), (0, 255, 0), 3)  # Green Box
+
+        # 2. Draw Keypoints
+        if len(result.keypoints.xy) > 0:
+            points = result.keypoints.xy[0].cpu().numpy()
+            for (x, y) in points:
+                cv2.circle(annotated_img, (int(x), int(y)), 10, (0, 0, 255), -1)  # Red Dots
+
+        return annotated_img
+
+    return None
