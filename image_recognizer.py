@@ -4,7 +4,7 @@ import torchvision.transforms as T
 import matplotlib.pyplot as plt
 
 # 1. Load your model
-model = YOLO('runs/pose/MTG_Scanner/card_corner_pose-5/weights/best.pt')
+model = YOLO('runs/pose/MTG_Scanner/card_corner_pose-7/weights/best.pt')
 
 
 import numpy as np
