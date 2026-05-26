@@ -1,4 +1,9 @@
 services:
+  fastapi_app:
+    build: .
+    ports:
+      - "8000:8000"
+    restart: always
   qdrant:
     image: qdrant/qdrant
     ports:
