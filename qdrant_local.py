@@ -29,8 +29,6 @@ def dataStorage():
             start = timeit.default_timer()
             img = Image.open(file_path).convert('RGB')
             vec = transformToVector(img)
-            #vectors.append(vec)
-            #filenames.append(file_path.name)
 
         # Step 2 - qdrant
             qdrant.upsert(
