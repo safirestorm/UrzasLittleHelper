@@ -2,7 +2,7 @@
 import torch #This is equivalent to Keras on some levels, but different in how to use it
 import torchvision.transforms as T #Part of the Torch package, used for vision ML
 
-model = torch.hub.load('facebookresearch/dinov2','dinov2_vits14') #Loading this specific version of DinoV2, the small model
+model = torch.hub.load('facebookresearch/dinov2','dinov2_vitb14') #Loading this specific version of DinoV2, the small model
 model.eval()  #Setting to inference mode - We are not training, no randomness. Deterministic outcomes ONLY
 
 def pad_to_square(image): #function to add padding to the image, rather than crop
