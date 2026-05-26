@@ -1,6 +1,8 @@
 # UrzasLittleHelper
 Velkommen til vores machine learning projekt til eksamen i juni 2026. 
 
+API er tilgængelig på: http://188.166.7.17:8000/docs
+
 ## Sådan starter du projektet på din egen computer:
 * Clone projektet ned til din computer.
 * Kør "Docker compose up -d" i terminalen for at starte en Qdrant server på din lokale maskine.
