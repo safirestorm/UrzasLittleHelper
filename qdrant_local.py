@@ -19,7 +19,7 @@ def dataStorage():
         qdrant.create_collection(
             collection_name="mtg_cards",
             vectors_config=VectorParams(
-                size=384,
+                size=768,
                 distance=Distance.COSINE
             )
         )

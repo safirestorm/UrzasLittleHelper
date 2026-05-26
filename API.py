@@ -7,7 +7,19 @@ import cv2
 
 from image_recognizer import getWarpedImage, getAnnotatedImage
 
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware # 1. Import the middleware
+
 app = FastAPI()
+
+# 2. Add the CORS configuration block
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows your phone, simulator, and web browsers to connect
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows POST, GET, etc.
+    allow_headers=["*"],
+)
 
 # Your requested processing function
 def process_image_logic(image) -> str:
