@@ -4,12 +4,22 @@ services:
     ports:
       - "8000:8000"
     restart: always
+    depends_on:
+      - qdrant
+    networks:
+      - urzas-network
   qdrant:
     image: qdrant/qdrant
     ports:
       - "6333:6333"
     volumes:
       - qdrant_data:/qdrant/storage
+    networks:
+      - urzas-network
 
 volumes:
   qdrant_data:
+
+networks:
+  urzas-network:
+    driver: bridge
