@@ -1,6 +1,6 @@
 services:
   fastapi_app:
-    build: .
+    image: mimi0001/urzashelper
     ports:
       - "8000:8000"
     restart: always
